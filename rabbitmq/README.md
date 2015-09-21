@@ -1,14 +1,14 @@
 # Scripts for monitoring RabbitMQ queues (*nix)
 
-1. *rabbitstatus* - bash script updates every 2 seconds and displays the following information:
+ **rabbitstatus** - bash script updates every 2 seconds and displays the following information:
 
-- [1] Queue name
-- [2] Number of processing messages
-- [3] Number of messages ready for processing
-- [4] Total number of messages
-- [5] Durability of queue
-- [6] The queue is temporary or not
-- [7] Number of consumers
+ - Queue name
+ - Number of processing messages
+ - Number of messages ready for processing
+ - Total number of messages
+ - Durability of queue
+ - The queue is temporary or not
+ - Number of consumers
 
 *Usage:*
 
@@ -24,7 +24,7 @@ queue      0  0  0  true   false  0
 rpc_queue  0  1  1  false  false  0
 ```
 
-2. *rabbitinfo* - PHP CLI script(requires php), displays the same information like *rabbitstatus*.
+ **rabbitinfo** - *PHP CLI* script(requires php), displays the same information like **rabbitstatus**.
 
 *Usage:*
 ```
