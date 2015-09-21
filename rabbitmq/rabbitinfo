@@ -1,0 +1,156 @@
+#!/usr/bin/env php
+
+<?php
+    /* Script shows RabbitMQ status info */
+    error_reporting(E_ERROR);
+
+    $usage = "Usage:\n" . $argv[0] . " -t <timeout> [-h]\n" .
+        "\n\t -t <timeout> - delay in seconds for updating data\r\n" .
+        "\t -h - help\r\n";
+
+    $help = "This is command line tool for monitoring simple RabbitMQ info." .
+        "\nInformation is updated with the specified timeout, given in <timeout>" .
+        "\n(5 seconds is default value)." .
+        "\nTool is recommended to use for debugging locally.\n" .
+        "\nColumns:" .
+        "\n   Queue name - The name of the queue" .
+        "\n   Processing messages - Number of processing messages" .
+        "\n   Ready messages - Number of messages ready for processing" .
+        "\n   Total messages - Total number of messages" .
+        "\n   Queue durability - Durability of queue" .
+        "\n   Temporary - The queue is temporary or not" .
+        "\n   Consumers - Number of consumers\r\n";
+
+    $options = getopt('t::h');
+
+    //check if options is correct
+    if($argc > 1 && empty($options)) {
+        echo $usage;
+        exit(1);
+    }
+
+    if(is_array($options) && isset($options['h'])) {
+        echo $help;
+        exit(0);
+    } else if(is_array($options)) {
+        //Check if script being ran by super user
+        if(posix_geteuid() != 0) {
+            echo "You need the root access to run this script\n";
+            exit(1);
+        }
+
+        //timeout by default
+        $timeout = 5;
+
+        if(isset($options['t']) && !empty($options['t'])) {
+            $timeout = ((int)$options['t'] > 0) ? (int)$options['t'] : $timeout;
+        }
+
+        showRabbitInfo(true);
+        system('clear');
+        //Show loop
+        while(true) {
+            showRabbitInfo();
+            sleep($timeout);
+        }
+    }
+
+    //display RabbitMQ info on the screen
+    function showRabbitInfo($first = false) {
+        $rabbitInfo = getRabbitInfo();
+        if($rabbitInfo == -1 && $first) {
+            echo "Unable to get information, check your RabbitMQ server\n";
+            exit(1);
+        }
+
+        $rabbitInfo = outputPrettify($rabbitInfo);
+        refresh($rabbitInfo);
+        $rabbitInfo = null;
+    }
+
+    //execute command rabbitmqctl and parse result
+    function getRabbitInfo() {
+        shellExec('rabbitmqctl list_queues name messages_unacknowledged messages_ready messages durable auto_delete consumers', $info, $error);
+        if($error && preg_match('/Error:/', $error)) {
+            return -1;
+        }
+
+        $info = cleanOutput($info);
+        if($info !== '') {
+            $info = explode("\n", $info);
+            foreach($info as $key => $value) {
+                $info[$key] = preg_split('/\s+/', $value);
+            }
+        } else {
+            $info = false;
+        }
+
+        return $info;
+    }
+
+    //clean RabbitMQ output
+    function cleanOutput($output) {
+        $cleanedOutput = preg_replace("/.+\.\.\./", '', $output);
+        $cleanedOutput = trim(preg_replace('/\s\s+/', ' ', $cleanedOutput));
+        return $cleanedOutput;
+    }
+
+    //build table with info fields
+    function outputPrettify($input) {
+        $output = '';
+        $headerTitles = array(
+            'Queue name' => 32,
+            'Processing messages' => 22,
+            'Ready messages' => 17,
+            'Total messages' => 17,
+            'Queue durability' => 18,
+            'Temporary' => 11,
+            'Consumers' => 11
+        );
+
+        //get columns width
+        $columns_widths = array_values($headerTitles);
+
+        //build header
+        foreach($headerTitles as $name => $width) {
+            $output .= str_pad($name, $width, ' ', STR_PAD_RIGHT);
+        }
+
+        $output .= "\n" . str_repeat('-', strlen($output)) . "\n";
+
+        //build rows
+        if(is_array($input) && !empty($input)) {
+            foreach($input as $row) {
+                foreach($row as $key => $value) {
+                    if(strlen($value) > 30) {
+                        $value = substr($value, 0, 26) . "...";
+                    }
+                    $output .= str_pad('  ' . $value, $columns_widths[$key], ' ', STR_PAD_RIGHT);
+                }
+                $output .= "\n";
+            }
+        } else {
+            $output .= "Queues list is empty...\r\n";
+        }
+
+        return $output;
+    }
+
+    //screen refresher
+    function refresh($str) {
+        echo chr(27) . "[2J" . chr(27) . "[;H";
+        echo $str;
+    }
+
+    //execute shell command
+    function shellExec($cmd, &$stdout = null, &$stderr = null) {
+        $proc = proc_open($cmd,[
+            1 => ['pipe','w'],
+            2 => ['pipe','w'],
+        ],$pipes);
+        $stdout = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[2]);
+        return proc_close($proc);
+    }
