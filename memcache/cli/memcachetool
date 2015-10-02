@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+
+<?php
+
+    require_once __DIR__ . '/vendor/autoload.php';
+    require_once __DIR__ . '/src/MemcacheToolShowCommand.php';
+    require_once __DIR__ . '/src/MemcacheToolFlushCommand.php';
+
+    use MemcacheToolShow\Console\Command\MemcacheToolShowCommand;
+    use MemcacheToolFlush\Console\Command\MemcacheToolFlushCommand;
+    use Symfony\Component\Console\Application;
+
+    error_reporting(E_ERROR);
+
+    $listCommand = new MemcacheToolShowCommand();
+    $flushCommand = new MemcacheToolFlushCommand();
+
+    $app = new Application('memcachetool', '0.0.1');
+    $app->add($listCommand);
+    $app->add($flushCommand);
+    $app->setDefaultCommand($listCommand->getName());
+    $app->run();
