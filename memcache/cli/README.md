@@ -1,18 +1,18 @@
 # memcachetool 0.0.1
 
-  Tool for monitoring your **Memcache** keys and values. Need to have installed **PHP** with **Memcache** support. Not for *production* use, use this tool on your own sandbox for debugging. :-)
+Tool for monitoring your **Memcache** keys and values. Need to have installed **PHP** with **Memcache** support. Not for *production* use, use this tool on your own sandbox for debugging. :-)
 
-  ### Installation
+## Installation:
 
-  1. `git clone https://github.com/egikander/tools.git`
-  2. Go to `memcache/cli` directory
-  3. Run `composer install`
+1. `git clone https://github.com/egikander/tools.git`
+2. Go to `memcache/cli` directory
+3. Run `composer install`
 
-  Now you can use *memcachetool*.
+Now you can use *memcachetool*.
 
-  ### Basic commands:
+## Basic commands:
 
-   1. `memcachetool show` - Shows all your **Memcache** keys and values in table.  
+1. `memcachetool show` - Shows all your **Memcache** keys and values in table.  
     1.1. `memcachetool show -a localhost -p 11211` - Defines server address and port(default **localhost:11221**).  
     1.2. `memcachetool show --count` - Shows number of the keys in storage.  
     1.3. `memcachetool show --number 2` - Number of keys that will be shown(for example 2 items).  
