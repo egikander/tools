@@ -4,7 +4,6 @@
 
     class MemcachedHelper {
         const MAX_KEYS_SHOW = 50;
-        const MAX_KEY_LENGTH = 30;
         const MAX_VALUE_LENGTH = 50;
 
         private $memcachedInstance;
@@ -14,7 +13,7 @@
             $this->memcachedInstance->addServer($host, $port);
         }
 
-        public function getMemcacheData($keys = array(), $maxKeysShow = 0, $compact = false) {
+        public function getMemcacheData($keys = array(), $maxKeysShow = 0, $compact = false, $web = false) {
             $memcacheKeys = array();
             $memcacheData = array();
 
@@ -31,7 +30,7 @@
 
                 if($maxKeysShow > 0 && $maxKeysShow <= $keysCount) {
                     $dataLength = $maxKeysShow;
-                } elseif($maxKeysShow > 0 && $maxKeysShow > $keysCount) {
+                } elseif($maxKeysShow > 0 && $maxKeysShow > $keysCount || $web) {
                     $dataLength = $keysCount;
                 } elseif($keysCount > self::MAX_KEYS_SHOW) {
                     $dataLength = self::MAX_KEYS_SHOW;
@@ -43,7 +42,7 @@
                     array_push(
                         $memcacheData,
                         array(
-                            $this->outputFormat($memcacheKeys[$i], self::MAX_KEY_LENGTH, $compact),
+                            $memcacheKeys[$i],
                             $this->outputFormat(
                                 $this
                                     ->memcachedInstance
