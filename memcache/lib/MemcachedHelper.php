@@ -53,6 +53,7 @@
                         )
                     );
                 }
+                sort($memcacheData);
             }
 
             $this->closeConnect();
