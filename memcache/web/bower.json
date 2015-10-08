@@ -1,0 +1,23 @@
+{
+  "name": "memcachetool",
+  "version": "0.0.1",
+  "homepage": "https://github.com/egikander/tools",
+  "authors": [
+    "egikander <egikander@gmail.com>"
+  ],
+  "description": "Memcache tool for monitoring keys and values",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.7",
+    "bootstrap": "~3.3.5",
+    "angular-websocket": "~1.0.14",
+    "angular-smart-table": "2.1.2"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "webmemcachetool",
+  "version": "0.0.1",
+  "description": "Web client tool for monitoring Memcache keys and values",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./serverstart",
+    "stop": "./serverstop"
+  },
+  "author": "egikander <egikander@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "http-server": "^0.8.5"
+  }
+}
