@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#kill webscoket server
+ps -ef | grep 'php server/MemcacheToolWebsocketServer.php' | grep -v grep | awk '{print $2}' | xargs kill -9 > /dev/null 2>&1
+#kill http-server
+ps -ef | grep 'http-server' | grep -v grep | awk '{print $2}' | xargs kill -9 > /dev/null 2>&1
+
+exit 0

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+ws_server_port="8003"
+memcache_server_address="localhost"
+memcache_server_port="11211"
+
+php server/MemcacheToolWebsocketServer.php $ws_server_port $memcache_server_address $memcache_server_port&
+http-server --silent&
+
+exit 0
