@@ -1,0 +1,41 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+h1 {
+    font-weight: bold;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.table {
+    width: 90%;
+}
+
+.md-table {
+    margin-left: 5%;
+}
+
+.info {
+    padding: 30px;
+}
+
+.info span {
+    display: block;
+    width: 80%;
+    word-break: break-all;
+}
+
+.info .btn {
+    margin: 15px;
+}
+
+.btnflush {
+    margin-right: 100px;
+    width: 100px;
+}

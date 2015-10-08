@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html ng-app="webmemcachetool">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Memcachetool - monitoring your memcache keys and values">
+    <title>Memcache Tool</title>
+
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+</head>
+<body ng-cloak ng-controller="mainController" ng-init="init()">
+
+    <h1>Memcache Tool</h1>
+    <button type="button" class="btn btn-danger btnflush pull-right" ng-click="flushAll()">Flush all</button>
+    <br/>
+    <hr/>
+    <br/>
+    <div>
+        <table ng-hide="keyViewMode" st-table="displayedMemcacheData" st-safe-src="memcacheData" class="table table-stripped md-table">
+            <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <input class="form-control" st-search type="search" placeholder="Search...">
+                    </th>
+                    <th colspan="2">
+                        Items per page:
+                        <select class="form-control"
+                            id="numItems"
+                            ng-model="itemsPerPage"
+                            ng-options="numItems for numItems in numItemsPerPage"
+                        >
+                        </select>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedMemcacheData">
+                    <td>{{row.key | strLimit:50}}</td>
+                    <td>{{row.value}}</td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-info"
+                                ng-click="viewInfo(row.key)">View
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button"
+                                class="btn btn-danger"
+                                ng-click="flush(row.key)">Flush
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-center">
+                        <div st-pagination st-items-by-page="itemsPerPage" st-displayed-pages="7"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div ng-show="keyViewMode">
+            <div class="info">
+                <span><strong>Key:</strong>&nbsp;{{viewKey}}</span>
+                <br/>
+                <span><strong>Value:</strong>&nbsp;{{viewValue}}</span>
+                <br/>
+                <button type="button" class="btn btn-info" ng-click="viewBack()">Back</button>
+                <button type="button" class="btn btn-danger" ng-click="flush(viewKey)">Flush</button>
+                <hr/>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-websocket/angular-websocket.js"></script>
+    <script type="text/javascript" src="bower_components/angular-smart-table/dist/smart-table.min.js"></script>
+
+    <script type="text/javascript" src="src/app.js"></script>
+    <script type="text/javascript" src="src/config.js"></script>
+
+</body>
+</html>
